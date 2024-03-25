@@ -2,18 +2,17 @@
   "name": "4-telestration",
   "version": "1.0.0",
   "description": "What happens when text-to-image and image-to-text AI models get into an endless loop",
-  "main": "index.html",
+  "main": "src/server.mjs",
   "scripts": {
-    "start": "esbuild src/dalle3-gpt4v.js --bundle --outdir=www --watch --serve --servedir=www --keyfile=tmp/your.key --certfile=tmp/your.cert",
-    "gen_dev_cert": "mkdir tmp && openssl req -x509 -newkey rsa:4096 -keyout tmp/your.key -out tmp/your.cert -days 9999 -nodes -subj /CN=127.0.0.1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/serve.mjs",
+    "gen_dev_cert": "mkdir tmp && openssl req -x509 -newkey rsa:4096 -keyout tmp/your.key -out tmp/your.cert -days 9999 -nodes -subj /CN=127.0.0.1"
   },
   "author": "Jerome Lecomte <jerle76@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.18.2",
     "openai": "^4.28.4"
   },
   "devDependencies": {
-    "esbuild": "^0.20.1"
   }
 }
