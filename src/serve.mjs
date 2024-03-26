@@ -36,7 +36,7 @@ async function postRequest(endpoint, apiKey, params) {
 
 app.post("/image/generate", async (req, res) => {
   let { model, system, prompt } = req.body;
-  prompt = system ? `${system}. Draw the following: ${prompt}` : prompt;
+  prompt = system ? `${system}: ${prompt}` : prompt;
   console.log({prompt})
 
   let endpoint, apiKey, params;
@@ -130,7 +130,7 @@ app.post("/image/describe", async (req, res) => {
       apiKey = null;
       params = {
         model,
-        prompt: `${system}. ${prompt}`,
+        prompt: `${system}: ${prompt}`,
         images: [await convertImageToBase64(url)],
         stream: false
       };

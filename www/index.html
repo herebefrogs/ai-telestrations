@@ -2,16 +2,19 @@
   <head>
     <title>text-to-image &lt;&gt; image-to-text</title>
     <style>
+      body { padding: 0; margin: 0; background-color: #FFF9C4 }
       header {
         position: sticky;
         top: 0;
-        background-color: white;
+        background-color: #03DAC5;
+        padding: 0 1em;
       }
-      p { font-size: 1.2em; }
+      p { font-size: 1em; }
       nav {
         display: flex;
         justify-content: space-between;
       }
+      img { display: block; }
       @keyframes spin {
         from {
           transform: rotate(0deg);
@@ -20,6 +23,25 @@
           transform: rotate(360deg);
         }
       }
+      #content {
+        display: flex;
+        flex-direction: column;
+        margin: 1em;
+      }
+      #content div {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+      }
+      #content div > p {
+        flex-grow: 1;
+      }
+      #content div > p:last-of-type {
+        margin-left: 2em;
+      }
+      #content div > p p:last-of-type {
+        font-size: 2em;
+      }
       #spin {
         display: none;
         animation: 2s linear infinite spin;
@@ -27,6 +49,7 @@
         transform-origin: center;
         width: 1.5em;
         vertical-align: middle;
+        margin-left: 50%;
       }
       /* Borrowed from Tailwind CSS */
       .w-6 { width: 1.5rem; /* 24px */  }
@@ -39,10 +62,11 @@
       <nav>
         <div>
           <p>Image system:
-            <textarea id="imgSys" type="text" cols="75" rows="1">You are an artist assistant doodling like a toddler in black & white lineart</textarea>
+            <textarea id="imgSys" type="text" cols="75" rows="1">Illustrate in black & white doodle style</textarea>
           </p>
-          <p>Image prompt: <textarea id="imgPrompt" type="text" cols="75" placeholder="describe initial image"></textarea></p>
-          <p>Image Model:
+          <p>Image prompt: <textarea id="imgPrompt" type="text" cols="75" rows="1" placeholder="describe initial image"></textarea></p>
+          <p>Image Model:</p>
+          <p>
             <input type="radio" id="dalle3" name="imgModel" value="dalle3" />
             <label for="dalle3">DALL.E-3</label>
             <input type="radio" id="openjourney" name="imgModel" value="sd-openjourney"/>
@@ -55,6 +79,22 @@
             <label for="stablediffusionxl">Stable Diffusion XL</label>
             <input type="radio" id="kandinsky2" name="imgModel" value="kandinsky-v2"/>
             <label for="kandinsky2">Kandinsky 2.1</label>
+          </p>
+        </div>
+        <div>
+          <p>Vision system:
+            <textarea id="vizSys" type="text" cols="75" rows="1">You are playing a doodle guessing game</textarea>
+          </p>
+          <p>Vision prompt:
+            <textarea id="vizPrompt" type="text" cols="75" rows="1">Describe what happens in this image in up to 10 words</textarea>
+          </p>
+          <p>Vision Model:
+            <input type="radio" id="gpt4v" name="vizModel" value="gpt4v" />
+            <label for="gpt4v">GPT-4 with Vision</label>
+            <input type="radio" id="llava" name="vizModel" value="llava" checked />
+            <label for="llava">LLaVa</label>
+            <input type="radio" id="bakllava" name="vizModel" value="bakllava" />
+            <label for="bakllava">BakLLaVa</label>
           </p>
           <p>
             <button id="send">
@@ -69,25 +109,9 @@
             </button>
           </p>
         </div>
-        <div>
-          <p>Vision system:
-            <textarea id="vizSys" type="text" cols="75" rows="1">You are an assistant playing a doodle guessing game</textarea>
-          </p>
-          <p>Vision prompt:
-            <textarea id="vizPrompt" type="text" cols="75" rows="1">Describe what happens in this image in no more than 6 words</textarea>
-          </p>
-          <p>Vision Model:
-            <input type="radio" id="gpt4v" name="vizModel" value="gpt4v" />
-            <label for="gpt4v">GPT-4 with Vision</label>
-            <input type="radio" id="llava" name="vizModel" value="llava" checked />
-            <label for="llava">LLaVa</label>
-            <input type="radio" id="bakllava" name="vizModel" value="bakllava" />
-            <label for="bakllava">BakLLaVa</label>
-          </p>
-        </div>
       </nav>
     </header>
-    <section id="rounds">
+    <section id="content">
       <!-- images and guesses go there -->
     </section>
     <svg id="spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -111,27 +135,33 @@
       function appendError(error) {
         const p = createElement("p", { innerText: error });
 
-        rounds.appendChild(p);
+        content.appendChild(p);
         // make sure this new image is visible at the bottom of the page
         spin.scrollIntoView(true);
       }
 
       function appendImage(src, model, alt = "") {
-        const p = createElement("p", { innerText: `${model} drew:`});
+        const p = createElement("p");
+        const who = createElement("span", { innerText: `${model} drew:`});
         const img = createElement("img", { alt, src, width: 512, height: 512});
         const div = createElement("div");
+        p.appendChild(who);
+        p.appendChild(img);
         div.appendChild(p);
-        div.appendChild(img);
 
-        rounds.appendChild(div);
+        content.appendChild(div);
         // make sure this new image is visible at the bottom of the page
         spin.scrollIntoView(true);
       }
 
       function appendDescription(text, model) {
-        const p = createElement("p", { innerText: `${model} saw: ${text}` });
+        const p = createElement("p");
+        const who = createElement("span", { innerText: `${model} saw:` });
+        const desc = createElement("p", { innerText: text });
+        p.appendChild(who);
+        p.appendChild(desc);
 
-        rounds.appendChild(p);
+        document.querySelector('#content div:last-of-type').appendChild(p);
         // make sure this new image is visible at the bottom of the page
         spin.scrollIntoView(true);
       }
@@ -191,7 +221,7 @@
 
       async function start() {
         running = true;
-        rounds.innerText = "";
+        content.innerText =  "";
         spin.style.display = "block";
 
         generateImage(imgPrompt.value);
