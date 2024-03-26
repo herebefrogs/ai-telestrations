@@ -45,8 +45,16 @@
           <p>Image Model:
             <input type="radio" id="dalle3" name="imgModel" value="dalle3" />
             <label for="dalle3">DALL.E-3</label>
-            <input type="radio" id="openjourney" name="imgModel" value="openjourney" checked/>
+            <input type="radio" id="openjourney" name="imgModel" value="sd-openjourney"/>
             <label for="openjourney">OpenJourney</label>
+            <input type="radio" id="anything4" name="imgModel" value="sd-anything-v4"/>
+            <label for="anything4">Anything v4</label>
+            <input type="radio" id="stablediffusion2" name="imgModel" value="stable-diffusion-v2" checked/>
+            <label for="stablediffusion2">Stable Diffusion v2</label>
+            <input type="radio" id="stablediffusionxl" name="imgModel" value="sdxl"/>
+            <label for="stablediffusionxl">Stable Diffusion XL</label>
+            <input type="radio" id="kandinsky2" name="imgModel" value="kandinsky-v2"/>
+            <label for="kandinsky2">Kandinsky 2.1</label>
           </p>
           <p>
             <button id="send">
@@ -73,6 +81,8 @@
             <label for="gpt4v">GPT-4 with Vision</label>
             <input type="radio" id="llava" name="vizModel" value="llava" checked />
             <label for="llava">LLaVa</label>
+            <input type="radio" id="bakllava" name="vizModel" value="bakllava" />
+            <label for="bakllava">BakLLaVa</label>
           </p>
         </div>
       </nav>

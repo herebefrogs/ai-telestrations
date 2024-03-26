@@ -35,20 +35,47 @@ async function postRequest(endpoint, apiKey, params) {
 // Endpoints
 
 app.post("/image/generate", async (req, res) => {
-  const prompt = req.body.system ? `${req.body.system}. Draw the following: ${req.body.prompt}` : req.body.prompt;
+  let { model, system, prompt } = req.body;
+  prompt = system ? `${system}. Draw the following: ${prompt}` : prompt;
   console.log({prompt})
 
   let endpoint, apiKey, params;
-  switch (req.body.model) {
-    case 'openjourney':
-      endpoint = "https://api.runpod.ai/v2/sd-openjourney/runsync";
+  switch (model) {
+    case 'stable-diffusion-v2':
+    case 'sd-anything-v4':
+    case 'sd-openjourney':
+      endpoint = `https://api.runpod.ai/v2/${model}/runsync`;
       apiKey = API_KEYS.RUNPOD;
       params = {
         input: {
           prompt,
           height: 512,
           width: 512,
-          num_outputs: 1    // Stable Diffusion v2 & Anything v4 use the same argument name, Stable Diffusion XL & Kandinsky name it num_images
+          num_outputs: 1
+        }
+      }
+      break;
+    case 'kandinsky-v2':
+      endpoint = `https://api.runpod.ai/v2/${model}/runsync`;
+      apiKey = API_KEYS.RUNPOD;
+      params = {
+        input: {
+          prompt,
+          h: 512,
+          w: 512,
+          num_images: 1
+        }
+      }
+      break;
+    case 'sdxl':
+      endpoint = `https://api.runpod.ai/v2/${model}/runsync`;
+      apiKey = API_KEYS.RUNPOD;
+      params = {
+        input: {
+          prompt,
+          height: 512,
+          width: 512,
+          num_images: 1
         }
       }
       break;
@@ -70,32 +97,41 @@ app.post("/image/generate", async (req, res) => {
   console.log('received', response)
   
   let url, error;
-  switch (req.body.model) {
-    case 'openjourney':
+  switch (model) {
+    case 'stable-diffusion-v2':
+    case 'sd-anything-v4':
+    case 'sd-openjourney':
       error = response.status !== "COMPLETED" ? response.status : "",
-      url = response.output[0].image
+      url = response.output[0]?.image
+      break;
+    case 'kandinsky-v2':
+    case 'sdxl':
+      error = response.status !== "COMPLETED" ? response.status : "",
+      url = response.output?.image_url;
       break;
     case 'dalle3':
       error = "",
-      url = response.data[0].url
+      url = response.data[0]?.url
       break;
   }
 
-  res.json({ error, url, model: req.body.model })
+  res.json({ error, url, model })
 });
 
 app.post("/image/describe", async (req, res) => {
+  let { model, system, prompt, url } = req.body;
   let endpoint, apiKey, params;
 
-  switch (req.body.model) {
+  switch (model) {
+    case 'bakllava':
     case 'llava':
       // Ollama
       endpoint = "http://localhost:11434/api/generate";
-      apiKey = "unused";
+      apiKey = null;
       params = {
-        model: "llava",
-        prompt: `${req.body.system}. ${req.body.prompt}`,
-        images: [await convertImageToBase64(req.body.url)],
+        model,
+        prompt: `${system}. ${prompt}`,
+        images: [await convertImageToBase64(url)],
         stream: false
       };
       break;
@@ -105,10 +141,10 @@ app.post("/image/describe", async (req, res) => {
       params = {
         model: "gpt-4-vision-preview",
         messages: [
-          { role: "system", content: req.body.system },
+          { role: "system", content: system },
           { role: "user", content: [
-            { type: "text", text: req.body.prompt },
-            { type: "image_url", image_url: req.body.url }
+            { type: "text", text: prompt },
+            { type: "image_url", image_url: url }
           ]}
         ]
       };
@@ -119,18 +155,19 @@ app.post("/image/describe", async (req, res) => {
   console.log('received', response);
     
   let error, desc;
-  switch (req.body.model) {
+  switch (model) {
+    case 'bakllava':
     case 'llava':
       error = response.error ?? "";
-      desc = response.response;
+      desc = response?.response;
       break;
     case 'gpt4v':
-      error = response.choices[0].finish_reason !== "stop" ? response.choices[0].finish_reason : "";
-      desc = response.choices[0].message.content;
+      error = response.error?.message ?? "";
+      desc = !error ? response.choices[0]?.message?.content : "";
       break;
     }
 
-    res.json({ error, desc, model: req.body.model });
+    res.json({ error, desc, model });
 });
 
 app.listen(8000, () => console.log("Server running on http://localhost:8000"));
