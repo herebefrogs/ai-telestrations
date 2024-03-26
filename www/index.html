@@ -106,8 +106,8 @@
         spin.scrollIntoView(true);
       }
 
-      function appendImage(src, alt = "") {
-        const p = createElement("p", { innerText: `${radioValue("imgModel")} drew:`});
+      function appendImage(src, model, alt = "") {
+        const p = createElement("p", { innerText: `${model} drew:`});
         const img = createElement("img", { alt, src, width: 512, height: 512});
         const div = createElement("div");
         div.appendChild(p);
@@ -118,8 +118,8 @@
         spin.scrollIntoView(true);
       }
 
-      function appendDescription(text) {
-        const p = createElement("p", { innerText: `${radioValue("vizModel")} saw: ${text}` });
+      function appendDescription(text, model) {
+        const p = createElement("p", { innerText: `${model} saw: ${text}` });
 
         rounds.appendChild(p);
         // make sure this new image is visible at the bottom of the page
@@ -138,7 +138,7 @@
       // API
 
       async function generateImage(prompt) {
-        const { error, url } = await postRequest("generate", {
+        const { error, url, model } = await postRequest("generate", {
           system: imgSys.value,
           prompt,
           model: radioValue("imgModel")
@@ -147,7 +147,7 @@
         if (error) {
           appendError(error);
         } else {
-          appendImage(url);
+          appendImage(url, model);
 
           if (running) {
             describeImage(url);
@@ -157,7 +157,7 @@
 
       async function describeImage(url) {
   
-        const { error, desc } = await postRequest("describe", {
+        const { error, desc, model } = await postRequest("describe", {
           system: vizSys.value,
           prompt: vizPrompt.value,
           model: radioValue("vizModel"),
@@ -167,7 +167,7 @@
         if (error) {
           appendError(error)
         } else {
-          appendDescription(desc)
+          appendDescription(desc, model)
 
           if (running) {
             generateImage(desc)
