@@ -49,7 +49,7 @@ app.post("/image/generate", async (req, res) => {
       params = {
         input: {
           prompt,
-          height: 512,
+          height: 384,
           width: 512,
           num_outputs: 1
         }
@@ -61,8 +61,8 @@ app.post("/image/generate", async (req, res) => {
       params = {
         input: {
           prompt,
-          h: 512,
-          w: 512,
+          h: 1024,
+          w: 1792,
           num_images: 1
         }
       }
@@ -73,8 +73,8 @@ app.post("/image/generate", async (req, res) => {
       params = {
         input: {
           prompt,
-          height: 512,
-          width: 512,
+          height: 1024,
+          width: 1792,
           num_images: 1
         }
       }
@@ -85,7 +85,7 @@ app.post("/image/generate", async (req, res) => {
       params = {
         model: "dall-e-3",
         quality: "standard",   // $0.04 / image
-        size: "1024x1024",
+        size: "1792x1024",
         style: "vivid",
         response_format: "url", // valid for 60min only
         prompt
