@@ -125,7 +125,8 @@ app.post("/image/describe", async (req, res) => {
     case 'bakllava':
     case 'llava':
       // Ollama
-      endpoint = "http://localhost:11434/api/generate";
+      endpoint = "https://evcyilcnp5z44d-11434.proxy.runpod.net/api/generate";
+      // endpoint = "http://localhost:11434/api/generate";
       apiKey = null;
       params = {
         model,

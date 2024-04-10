@@ -2,9 +2,9 @@
   "name": "ai-telestration",
   "version": "1.0.0",
   "description": "What happens when text-to-image and image-to-text AI models get into an endless loop",
-  "main": "src/server.mjs",
+  "main": "src/proxy.mjs",
   "scripts": {
-    "start": "node src/serve.mjs",
+    "start": "node src/proxy.mjs",
     "gen_dev_cert": "mkdir tmp && openssl req -x509 -newkey rsa:4096 -keyout tmp/your.key -out tmp/your.cert -days 9999 -nodes -subj /CN=127.0.0.1"
   },
   "author": "Jerome Lecomte <jerome@herebefrogs.com>",

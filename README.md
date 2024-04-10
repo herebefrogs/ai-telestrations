@@ -33,7 +33,7 @@ npm start
 |      |
 |      | POST prompts & models selected
 |      v
-|    /src/server.js                      (proxy request to AI model hosting provider)
+|    /src/proxy.js                       (proxy request to AI model hosting provider)
 |       |
 |       | POST image generation/chat completion request
 |       v
@@ -41,7 +41,7 @@ npm start
 |       |
 |       | return image generation/chat completion response
 |       v
-|    /src/server.js                      (proxy response to UI)
+|    /src/proxy.js                       (proxy response to UI)
 |       |
 |       | return data in consistent format
 |       v
