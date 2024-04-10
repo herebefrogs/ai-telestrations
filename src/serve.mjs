@@ -1,4 +1,3 @@
-import OpenAI from "openai";
 import express from "express";
 import { default as API_KEYS } from "../api-keys.json" with { type: "json" };
 
