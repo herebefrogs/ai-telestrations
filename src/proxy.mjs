@@ -1,14 +1,19 @@
 import express from "express";
 import { default as API_KEYS } from "../api-keys.json" with { type: "json" };
 
-// TODO
-// add more model opeions for Anything, Kandinsky, Stable Diffusion on RunPod
-// try to host llava on RunPod for faster response time than local
 
 const app = express();
 app.use(express.static("www"));
 app.use(express.json()) // for parsing req.body when mine type is application/json
 
+const CONFIG = {
+  OLLAMA: {
+    // local
+    ENDPOINT: "http://localhost:11434"
+    // hosted at Runpod.io
+    // ENDPOINT: "https://<POD_ID>-11434.proxy.runpod.net"
+  }
+}
 // Utils
 
 async function convertImageToBase64(url) {
@@ -125,8 +130,7 @@ app.post("/image/describe", async (req, res) => {
     case 'bakllava':
     case 'llava':
       // Ollama
-      endpoint = "https://evcyilcnp5z44d-11434.proxy.runpod.net/api/generate";
-      // endpoint = "http://localhost:11434/api/generate";
+      endpoint = CONFIG.OLLAMA.ENDPOINT + "/api/generate";
       apiKey = null;
       params = {
         model,
