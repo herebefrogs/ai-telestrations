@@ -56,7 +56,7 @@
   </head>
   <body>
     <header>
-      <h1>text-to-image &lt;&gt; image-to-text</h1>
+      <!-- <h1>text-to-image &lt;&gt; image-to-text</h1> -->
       <nav>
         <div>
           <p>Image system:
@@ -140,7 +140,7 @@
       function appendImage(src, model, alt = "") {
         const p = createElement("p");
         const who = createElement("span", { innerText: `${model} drew:`});
-        const img = createElement("img", { alt, src, width: 512 });
+        const img = createElement("img", { alt, src, width: 800 });
         const div = createElement("div");
         p.appendChild(who);
         p.appendChild(img);
