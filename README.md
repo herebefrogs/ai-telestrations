@@ -11,7 +11,7 @@ Get text-to-image and image-to-text AI models into an infinite loop, feeding the
 
 And/or
 - a [RunPod.io API account](https://www.runpod.io/console/signup) & API key (for OpenJourney, Anything, Stable Diffusion 2/XL & Kandinsky models)
-- and any computer vision model running locally via [Ollama](https://ollama.ai) (for LlaVa and BakLlaVa models).
+- and any computer vision model running locally via [Ollama](https://ollama.ai) (for LlaVa, BakLlaVa and Moondream models).
 
 
 ### Getting started
@@ -20,6 +20,7 @@ And/or
 ```
 ollama pull llava
 ollama pull bakllava
+ollama pull moondream
 ```
 2. Setup and start the UI with the following commands:
 ```
@@ -39,7 +40,7 @@ You can run these models on Runpod.io with the following steps:
 
 1. In your Runpod dashboard, create a Template pulling and starting the Ollama Docker image ![Runpod template for Ollama docker image](docs/runpod-template.png)
 2. Deploy a new GPU pod using this template ![Select a Runpod GPU instance](docs/runpod-gpu-pod-deploy-1.png)![Select a Runpod template and deploy](docs/runpod-gpu-pod-deploy-2.png)
-3. Click Connect > Start Web Terminal + Connect to Web Terminal. In terminal, run `ollama pull llava; ollama pull bakllava`
+3. Click Connect > Start Web Terminal + Connect to Web Terminal. In terminal, run `ollama pull llava; ollama pull bakllava; ollama pull moondream`
 4. Pass the Rundpod ID as an environment variable when starting the proxy with this command:
 ```
 RUNPOD_ID=<YOUR_POD_ID_HERE> npm start

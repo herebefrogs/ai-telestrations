@@ -124,6 +124,7 @@ app.post("/image/describe", async (req, res) => {
   let endpoint, apiKey, params;
 
   switch (model) {
+    case 'moondream':
     case 'bakllava':
     case 'llava':
       // Ollama
@@ -157,6 +158,7 @@ app.post("/image/describe", async (req, res) => {
     
   let error, desc;
   switch (model) {
+    case 'moondream':
     case 'bakllava':
     case 'llava':
       error = response.error ?? "";
