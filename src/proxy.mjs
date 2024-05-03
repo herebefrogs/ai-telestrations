@@ -8,10 +8,7 @@ app.use(express.json()) // for parsing req.body when mine type is application/js
 
 const CONFIG = {
   OLLAMA: {
-    // local
-    ENDPOINT: "http://localhost:11434"
-    // hosted at Runpod.io
-    // ENDPOINT: "https://<POD_ID>-11434.proxy.runpod.net"
+    ENDPOINT: process.env.RUNPOD_ID ? `https://${process.env.RUNPOD_ID}-11434.proxy.runpod.net` : "http://localhost:11434",
   }
 }
 // Utils

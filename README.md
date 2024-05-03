@@ -40,18 +40,9 @@ You can run these models on Runpod.io with the following steps:
 1. In your Runpod dashboard, create a Template pulling and starting the Ollama Docker image ![Runpod template for Ollama docker image](docs/runpod-template.png)
 2. Deploy a new GPU pod using this template ![Select a Runpod GPU instance](docs/runpod-gpu-pod-deploy-1.png)![Select a Runpod template and deploy](docs/runpod-gpu-pod-deploy-2.png)
 3. Click Connect > Start Web Terminal + Connect to Web Terminal. In terminal, run `ollama pull llava; ollama pull bakllava`
-4. In `proxy.mjs`, make the following changes and replace <POD_ID> with your Pod ID in the ENDPOINT url:
+4. Pass the Rundpod ID as an environment variable when starting the proxy with this command:
 ```
- const CONFIG = {
-   OLLAMA: {
-     // local
--    ENDPOINT: "http://localhost:11434"
-+    // ENDPOINT: "http://localhost:11434"
-     // hosted at Runpod.io
--    // ENDPOINT: "https://<POD_ID>-11434.proxy.runpod.net"
-+    ENDPOINT: "https://<POD_ID>-11434.proxy.runpod.net"
-   }
- }
+RUNPOD_ID=<YOUR_POD_ID_HERE> npm start
 ```
 
 ## Developer's corner
